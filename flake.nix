@@ -2,13 +2,8 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    # NixOS official package source, here using the nixos-23.11 branch
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-    # helix editor, use the master branch
-    # helix.url = "github:helix-editor/helix/master";
-
-    # home-manager, used for managing user configuration
     home-manager = {
       url = "github:nix-community/home-manager";
       # The `follows` keyword in inputs is used for inheritance.
@@ -17,6 +12,11 @@
       # to avoid problems caused by different versions of nixpkgs.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+#    firefox-addons = {
+#      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+#      inputs.nixpkgs.follows = "nixpkgs";
+#    };
 
     catppuccin-bat = {
       url = "github:catppuccin/bat";
@@ -30,12 +30,12 @@
     with myLib;  {
       nixosConfigurations = {
         nh = mkSystem ./hosts/nh/configuration.nix;
-        nh2 = mkSystem ./hosts/vm2/configuration.nix;
+        nh2 = mkSystem ./hosts/nh2/configuration.nix;
       };
 
       homeConfigurations = {
         "nh@nh" = mkHome "x86_64-linux" ./hosts/nh/home.nix;
-        "nh2@hydrogren" = mkHome "x86_64-linux" ./hosts/vm2/home.nix;
+        "nh2@nh" = mkHome "x86_64-linux" ./hosts/nh2/home.nix;
       }; 
       homeManagerModules.default = ./homeManagerModules;
       nixosModules.default = ./nixosModules;

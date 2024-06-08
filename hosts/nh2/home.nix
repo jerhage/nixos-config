@@ -2,8 +2,8 @@
 
 {
   imports = [ outputs.homeManagerModules.default ];
-  home.username = "nh";
-  home.homeDirectory = lib.mkDefault "/home/nh";
+  home.username = "nh2";
+  home.homeDirectory = lib.mkDefault "/home/nh2";
 
   myHomeManager = {
     bundles.general.enable = true;

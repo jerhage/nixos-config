@@ -17,26 +17,37 @@
   programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
+    btop  # replacement of htop/nmon
+    ethtool
     nil
     nixd
     pistol
     file
+    xz
     p7zip
     unzip
     zip
     stow
     neovim
+    glow # markdown previewer in terminal
 
-    fzf
+    ripgrep
+    yq-go
     eza
+    fzf
     fd
+    
+    qemu
+    virt-manager
+    bridge-utils
+
     zoxide
     bat
-    ripgrep
     neofetch
     tree-sitter
 
     nh
+    nix-output-monitor
   ];
 
   home.sessionVariables = {

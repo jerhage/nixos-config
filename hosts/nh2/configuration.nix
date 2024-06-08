@@ -23,7 +23,7 @@
     bundles.users.enable = true;
     # sharedSettings.hyprland.enable = false;
     home-users = {
-      "nh" = {
+      "nh2" = {
         userConfig = ./home.nix;
 	userSettings = {
 	  extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" ];
@@ -34,7 +34,7 @@
   };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.nh = {
+  users.users.nh2 = {
     isNormalUser = true;
     description = "";
     extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" ];

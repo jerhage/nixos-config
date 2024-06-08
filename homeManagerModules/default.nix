@@ -20,12 +20,22 @@
       configExtension = config: (lib.mkIf cfg.bundles.${name}.enable config);
     })
     (myLib.filesIn ./bundles);
+
+  # Taking all module bundles in ./bundles and adding bundle.enables to them
+  programs =
+    myLib.extendModules
+    (name: {
+      extraOptions = {
+        myHomeManager.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+      };
+
+      configExtension = config: (lib.mkIf cfg.${name}.enable config);
+    })
+    (myLib.filesIn ./programs);
 in {
   imports = [ 
-    # ./nh.nix
-    ./jq.nix
-    ./alacritty.nix
-    ./fd.nix
-  ] ++ bundles;
+  ] 
+  ++ programs
+  ++ bundles;
 }
 
