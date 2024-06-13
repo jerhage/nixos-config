@@ -6,15 +6,15 @@
   ...
 }: {
 
+  imports = [inputs.nur.hmModules.nur];
   nixpkgs = {
     config = {
-      allowUnfree = true;
+      allowUnfreePredicate = (pkgs) true;
       experimental-features = "nix-command flakes";
     };
   };
 
-
-  programs.home-manager.enable = true;
+  #programs.home-manager.enable = true;
 
   home.packages = with pkgs; [
     btop  # replacement of htop/nmon

@@ -6,24 +6,23 @@
 
 {
   imports =
-    [ 
-      ./hardware-configuration.nix
-    ];
+    [./hardware-configuration.nix];
 
   environment = {
     sessionVariables = {
-      # FLAKE = "/home/nh/nixos-config";
+      # FLAKE = "/home/jh/nixos-config";
     };
     systemPackages = with pkgs; [
       nh
+      magic-wormhole
     ];
   };
 
   myNixOS = {
     bundles.users.enable = true;
-    # sharedSettings.hyprland.enable = false;
+    sharedSettings.hyprland.enable = true;
     home-users = {
-      "nh" = {
+      "jh" = {
         userConfig = ./home.nix;
 	userSettings = {
 	  extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" ];
@@ -33,22 +32,23 @@
     userConfig = ./home.nix;
   };
 
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.nh = {
+  users.users.jh = {
     isNormalUser = true;
     description = "";
     extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" ];
     packages = with pkgs; [
-      #firefox
     ];
   };
 
+  #programs.hyprland.enable = true;
   programs.zsh.enable = false;
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/vda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelParams = ["nvidia-drm.modeset=1" "nvidia-drm.fbdev=1"];
 
   networking.hostName = "nucleus"; # Define your hostname.
   networking.networkmanager.enable = true;
@@ -77,15 +77,64 @@
   services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
-  services.xserver = {
-    xkb = { 
-      variant = ""; 
-      layout = "us";
-    };
-  };
+#  services.xserver = {
+#    xkb = { 
+#      variant = ""; 
+#      layout = "us";
+#    };
+#  };
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+  
+  # Enable OpenGL
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
+  
+  hardware.enableAllFirmware = true;
+  hardware.cpu.amd.updateMicrocode = true; #must have unfree
+
+# Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = ["nvidia" "modesetting" ];
+
+  powerManagement.cpuFreqGovernor = "performance";
+
+  hardware.nvidia = {
+
+    # Modesetting is required.
+    modesetting.enable = true;
+
+    # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
+    # Enable this if you have graphical corruption issues or application crashes after waking
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
+    # of just the bare essentials.
+    powerManagement.enable = false;
+
+    # Fine-grained power management. Turns off GPU when not in use.
+    # Experimental and only works on modern Nvidia GPUs (Turing or newer).
+    powerManagement.finegrained = false;
+
+    # Use the NVidia open source kernel module (not to be confused with the
+    # independent third-party "nouveau" open source driver).
+    # Support is limited to the Turing and later architectures. Full list of 
+    # supported GPUs is at: 
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Only available from driver 515.43.04+
+    # Currently alpha-quality/buggy, so false is currently the recommended setting.
+    open = false;
+
+    # Enable the Nvidia settings menu,
+    # accessible via `nvidia-settings`.
+    nvidiaSettings = true;
+
+    # Optionally, you may need to select the appropriate driver version for your specific GPU.
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
+  };
 
   # Enable sound with pipewire.
   sound.enable = true;

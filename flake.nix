@@ -13,10 +13,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-#    firefox-addons = {
-#      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-#      inputs.nixpkgs.follows = "nixpkgs";
-#    };
+    hyprland.url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nur.url = "github:nix-community/NUR";
 
     catppuccin-bat = {
       url = "github:catppuccin/bat";
@@ -29,12 +33,12 @@
   in
     with myLib;  {
       nixosConfigurations = {
-        nh = mkSystem ./hosts/nh/configuration.nix;
+        desktop = mkSystem ./hosts/desktop/configuration.nix;
         nh2 = mkSystem ./hosts/nh2/configuration.nix;
       };
 
       homeConfigurations = {
-        "nh@nh" = mkHome "x86_64-linux" ./hosts/nh/home.nix;
+        "jh@desktop" = mkHome "x86_64-linux" ./hosts/desktop/home.nix;
         "nh2@nh" = mkHome "x86_64-linux" ./hosts/nh2/home.nix;
       }; 
       homeManagerModules.default = ./homeManagerModules;

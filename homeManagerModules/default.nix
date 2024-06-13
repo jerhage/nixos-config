@@ -34,6 +34,7 @@
     (myLib.filesIn ./programs);
 in {
   imports = [ 
+  ./config.nix
   ] 
   ++ programs
   ++ bundles;

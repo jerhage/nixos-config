@@ -13,19 +13,31 @@
     })
     (myLib.filesIn ./bundles);
 
+      # Taking all modules in ./features and adding enables to them
+  programs =
+    myLib.extendModules
+    (name: {
+      extraOptions = {
+        myNixOS.${name}.enable = lib.mkEnableOption "enable my ${name} configuration";
+      };
+
+      configExtension = config: (lib.mkIf cfg.${name}.enable config);
+    })
+    (myLib.filesIn ./programs);
+
 in {
     imports = [ 
-    ./programs
     ./services/virtualization.nix
     inputs.home-manager.nixosModules.home-manager
     ]
+    ++ programs
     ++ bundles;
 
     options.myNixOS = {
       sharedSettings = {
         hyprland = {
           enable = lib.mkEnableOption "enable hyprland";
-	  default = false;
+	  default = true;
 	};
       };
     };
@@ -34,5 +46,6 @@ in {
       nix.settings.experimental-features = ["nix-command" "flakes"];
       # programs.nix-ld.enable = true;
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.config.allowUnfreePredicate = (pkg: true);
     };
 }

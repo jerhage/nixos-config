@@ -13,7 +13,7 @@ in {
     type = lib.types.attrsOf (lib.types.submodule {
       options = {
         userConfig = lib.mkOption {
-          # default = ./../../home-manager/work.nix;
+          default = ./../../home-manager/work.nix;
           example = "DP-1";
         };
         userSettings = lib.mkOption {

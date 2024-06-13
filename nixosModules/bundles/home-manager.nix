@@ -11,14 +11,14 @@
 in {
   options.myNixOS = {
     userName = lib.mkOption {
-      default = "nh";
+      default = "jh";
       description = ''
         username
       '';
     };
 
     userConfig = lib.mkOption {
-      default = ./../../hosts/nh/home.nix;
+      default = ./../../hosts/desktop/home.nix;
       description = ''
         home-manager config path
       '';
@@ -35,7 +35,10 @@ in {
   config = {
     programs.bash.enable = true;
 
-    programs.hyprland.enable = cfg.sharedSettings.hyprland.enable;
+    programs.hyprland = {
+      enable = cfg.sharedSettings.hyprland.enable;
+      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    };
 
     services.xserver = lib.mkIf cfg.sharedSettings.hyprland.enable {
       displayManager = {
@@ -67,7 +70,7 @@ in {
         isNormalUser = true;
         initialPassword = "12345";
         description = cfg.userName;
-        shell = pkgs.zsh;
+        shell = pkgs.bash;
         extraGroups = ["libvirtd" "networkmanager" "wheel"];
       }
       // cfg.userNixosSettings;

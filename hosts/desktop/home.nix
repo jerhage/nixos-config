@@ -1,15 +1,21 @@
-{ pkgs, inputs, outputs, lib, ... }:
 
+
+
+
+
+{ pkgs, inputs, outputs, lib, ... }:
 {
   imports = [ outputs.homeManagerModules.default ];
-  home.username = "nh";
-  home.homeDirectory = lib.mkDefault "/home/nh";
+  home.username = "jh";
+  home.homeDirectory = lib.mkDefault "/home/jh";
+
+  nixpkgs.config.allowUnfree = lib.mkForce true;
 
   myHomeManager = {
     bundles.general.enable = true;
     bundles.desktop.enable = true;
+    firefox.enable = true;
   };
-
 
   programs.git = {
     enable = true;
@@ -21,10 +27,6 @@
       };
     };
   };
-
-
-
-
 
     programs.tealdeer = {
       enable = true;
@@ -45,4 +47,5 @@
 
   # Let home Manager install and manage itself.
   programs.home-manager.enable = true;
+
 }
